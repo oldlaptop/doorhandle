@@ -7,8 +7,9 @@ ah_dia = 3 / 8;
 
 wall_thickness = 0.075;
 
-chamfer = 1;
-rad = 4;
+chamfer = width / 2;
+top_rad = 4;
+scallop_rad = height * 2;
 
 $fn = 128;
 followthrough = 0.01;
@@ -33,7 +34,7 @@ module doorhandle_body(
 	width = width,
 	depth = depth,
 	chamfer = chamfer,
-	rad = rad
+	top_rad = top_rad
 )
 {
 	intersection()
@@ -53,11 +54,11 @@ module doorhandle_body(
 				}
 			}
 		}
-		translate([0, 0, depth - rad])
+		translate([0, 0, depth - top_rad])
 		{
 			rotate([270, 0, 0])
 			{
-				cylinder(r = rad, h = height);
+				cylinder(r = top_rad, h = height);
 			}
 		}
 	}
@@ -84,7 +85,8 @@ module doorhandle(
 	width = width,
 	depth = depth,
 	chamfer = chamfer,
-	rad = rad,
+	top_rad = top_rad,
+	scallop_dist = scallop_dist,
 	mh_dist = mh_dist,
 	mh_dia = mh_dia,
 	wall_thickness = wall_thickness
@@ -92,7 +94,7 @@ module doorhandle(
 {
 	difference()
 	{
-		doorhandle_body(height, width, depth, chamfer, rad);
+		doorhandle_body(height, width, depth, chamfer, top_rad);
 		translate([-followthrough, wall_thickness, wall_thickness])
 		{
 			doorhandle_body(
@@ -100,7 +102,7 @@ module doorhandle(
 				width - wall_thickness + followthrough,
 				depth - 2 * wall_thickness,
 				chamfer = chamfer,
-				rad = rad
+				top_rad = top_rad
 			);
 		}
 		translate([0, height / 2, 0])
@@ -117,8 +119,22 @@ module doorhandle(
 						depth
 					);
 				}
+				if (scallop_rad > 0)
+				{
+					xoffs = sqrt(
+						pow(scallop_rad, 2)
+						-
+						pow(height, 2) / 4
+					);
+					echo(pow(scallop_rad, 2));
+					translate([-xoffs, 0, wall_thickness])
+					{
+						cylinder(r = scallop_rad, h = height);
+					}
+				}
 			}
 		}
+
 	}
 }
 
