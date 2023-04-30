@@ -86,7 +86,7 @@ module doorhandle(
 	depth = depth,
 	chamfer = chamfer,
 	top_rad = top_rad,
-	scallop_dist = scallop_dist,
+	scallop_rad = scallop_rad,
 	mh_dist = mh_dist,
 	mh_dia = mh_dia,
 	wall_thickness = wall_thickness
@@ -126,7 +126,6 @@ module doorhandle(
 						-
 						pow(height, 2) / 4
 					);
-					echo(pow(scallop_rad, 2));
 					translate([-xoffs, 0, wall_thickness])
 					{
 						cylinder(r = scallop_rad, h = height);
