@@ -1,11 +1,12 @@
 height = 6;
-width = 2.5;
-depth = 1.5;
+width = 1.5;
+depth = 1;
 mh_dist = 1.5;
-mh_dia = 0.125;
-ah_dia = 3 / 8;
+mh_dia = 3 / 16;
+mh_xoffs = 3 / 16;
+ah_dia = 1 / 2;
 
-wall_thickness = 0.075;
+wall_thickness = 3 / 32;
 
 chamfer = width / 2;
 top_rad = 4;
@@ -89,7 +90,8 @@ module doorhandle(
 	scallop_rad = scallop_rad,
 	mh_dist = mh_dist,
 	mh_dia = mh_dia,
-	wall_thickness = wall_thickness
+	mh_xoffs = mh_xoffs,
+	wall_thickness = wall_thickness,
 )
 {
 	difference()
@@ -109,15 +111,18 @@ module doorhandle(
 		{
 			union()
 			{
-				hole_channels(mh_dist, mh_dia, width, wall_thickness);
-				translate([0, 0, wall_thickness + followthrough])
+				translate([mh_xoffs, 0, 0])
 				{
-					hole_channels(
-						mh_dist,
-						ah_dia,
-						width,
-						depth
-					);
+					hole_channels(mh_dist, mh_dia, width, wall_thickness);
+					translate([0, 0, wall_thickness + followthrough])
+					{
+						hole_channels(
+							mh_dist,
+							ah_dia,
+							width,
+							depth
+						);
+					}
 				}
 				if (scallop_rad > 0)
 				{
